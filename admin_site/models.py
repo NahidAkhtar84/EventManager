@@ -17,6 +17,7 @@ def image_path(instance, filename):
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
+    category = models.CharField(max_length=255, null=True, blank=True)
     details = RichTextField(blank=True, null=True)
     date = models.DateField(auto_now_add=True)
     images = models.ImageField(blank=True, null=True, upload_to=image_path)
