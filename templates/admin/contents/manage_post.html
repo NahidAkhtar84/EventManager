@@ -5,16 +5,17 @@
 {% endblock %}
 
 {% block css %}
-    <link href="{% static 'admin/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
     <link href="{% static 'admin/lity/dist/lity.css' %}" rel="stylesheet">
+    <link href="{% static 'admin/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block js %}
+    <script src="{% static 'admin/lity/vendor/jquery.js' %}"></script>
+    <script src="{% static 'admin/lity/dist/lity.js' %}"></script>
     <script src="{% static 'admin/vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'admin/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
     <script src="{% static 'admin/js/demo/datatables-demo.js' %}"></script>
-    <script src="{% static 'admin/lity/vendor/jquery.js' %}"></script>
-    <script src="{% static 'admin/lity/dist/lity.js' %}"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -67,7 +68,7 @@
                                         </span>
                                         <span class="text">Edit</span>
                                     </a>
-                                    <a href="#" class="btn btn-danger btn-icon-split btn-sm">
+                                    <a href="{% url 'delete-post' post.id %}" class="btn btn-danger btn-icon-split btn-sm">
                                         <span class="icon text-white-50">
                                           <i class="fas fa-trash"></i>
                                         </span>
