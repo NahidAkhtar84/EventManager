@@ -37,8 +37,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ckeditor',
     'event_booking',
+    'blog',
+    'admin_site',
 ]
+
+# CKEDITOR_CONFIGS = {
+#     'default': {
+#         'height': 300,
+#         'width': 850.33,
+#     },
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
