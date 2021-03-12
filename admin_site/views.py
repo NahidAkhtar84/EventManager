@@ -93,5 +93,9 @@ def EditPost(request, pk):
 
 
 def DeletePost(request, pk):
-    BlogPost.objects.get(id=pk).delete()
+    post = BlogPost.objects.get(id=pk)
+    post.delete()
+    image_path = post.images.path
+    if os.path.exists(image_path):
+        os.remove(image_path)
     return redirect('manage-post')
