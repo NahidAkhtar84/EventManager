@@ -237,8 +237,10 @@
 
             {% if firstblog %}
             <div class="col-lg-6">
+                {% if firstblog.images %}
                 <div class="latest-item set-bg large-item" style="height: 550px; width: 525px"
                      data-setbg="{{ firstblog.images.url }}">
+                    {% endif %}
                     <div class="li-tag">Marketing</div>
                     <div class="li-text">
                         <h4><a href="blog-details.html">{{ firstblog.title }}</a></h4>
@@ -251,7 +253,9 @@
             {% if blogs %}
             <div class="col-lg-6">
                 {% for blog in blogs %}
+                {% if blog.images %}
                 <div class="latest-item set-bg" style="height: 255px; width: 525px" data-setbg="{{ blog.images.url }}">
+                    {% endif %}
                     <div class="li-tag">Experience</div>
                     <div class="li-text">
                         <h5><a href="blog-details.html">{{ blog.title }}</a></h5>
