@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     # index page
     path('', views.Index, name='index'),
+    path('blog/<str:slug>', views.BlogDetails, name='details'),
 ]
 
 if settings.DEBUG:

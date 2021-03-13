@@ -18,6 +18,7 @@ def WritePost(request):
         if post_form.is_valid():
             blog = BlogPost()
             blog.title = post_form.cleaned_data['title']
+            blog.category = post_form.cleaned_data['category']
             blog.images = post_form.cleaned_data['image']
             blog.details = post_form.cleaned_data['details']
 
@@ -49,6 +50,7 @@ def EditPost(request, pk):
         if form.is_valid():
             blog = BlogPost(id=pk)
             blog.title = form.cleaned_data['title']
+            blog.category = form.cleaned_data['category']
             blog.images = form.cleaned_data['image']
             blog.details = form.cleaned_data['details']
             blog.date = date.today()
@@ -63,10 +65,11 @@ def EditPost(request, pk):
     else:
         if request.method == 'POST':
             title = request.POST.get('title')
+            category = request.POST.get('category')
             c_image = request.POST.get('current_image')
             details = request.POST.get('details')
 
-            BlogPost.objects.filter(id=pk).update(title=title, images=c_image, details=details, date=date.today())
+            BlogPost.objects.filter(id=pk).update(title=title, category=category, images=c_image, details=details, date=date.today())
             return redirect("manage-post")
 
     # if request.method == 'POST':
