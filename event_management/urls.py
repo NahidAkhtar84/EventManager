@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from event_booking.views import add_event, EventBook, update, remove
+from general.views import AboutUs
 
 urlpatterns = [
     # user View
@@ -10,6 +11,7 @@ urlpatterns = [
     path('booking', EventBook.as_view(), name='booking'),
     path('update$', update, name='update'),
     path('remove', remove, name='remove'),
+    path('aboutus', AboutUs.as_view(), name='aboutus'),
 
     # DJ Admin Section
     path('admin/', admin.site.urls),

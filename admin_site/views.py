@@ -4,12 +4,16 @@ from .models import BlogPost
 import os
 from datetime import date
 from django.http import JsonResponse
-
+from event_booking.models import Events
 
 # Create your views here.
 
 def Dashboard(request):
-    return render(request, 'admin/contents/dashboard.html')
+    all_events = Events.objects.filter(status='accepted')
+    context = {
+        "events": all_events,
+    }
+    return render(request, 'admin/contents/dashboard.html', context)
 
 
 def WritePost(request):

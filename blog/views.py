@@ -3,6 +3,7 @@ from event_booking.models import Events
 import datetime
 from django.core.paginator import Paginator, EmptyPage
 from admin_site.models import BlogPost
+from general.models import about_us, company_address
 from django.http import JsonResponse
 
 
@@ -10,10 +11,11 @@ from django.http import JsonResponse
 
 def Index(request):
     all_events = Events.objects.filter(status='accepted')
-    recent_events = Events.objects.filter(status='accepted').filter(start__gte=datetime.datetime.now()).order_by(
-        '-start')
+    recent_events = Events.objects.filter(status='accepted').filter(start__gte = datetime.datetime.now()).order_by('-start')
     firstblog = BlogPost.objects.all().order_by('date')[0]
     blogs = BlogPost.objects.all().order_by('date')[1:3]
+    aboutus = about_us.objects.first()
+    comp_address = company_address.objects.first()
 
     page = request.GET.get('page', 1)
     paginator = Paginator(recent_events, 3)
@@ -23,13 +25,15 @@ def Index(request):
     except EmptyPage:
         recent_events = paginator.page(paginator.num_pages)
 
+
     context = {
         "events": all_events,
         "recent_events": recent_events,
         "blogs": blogs,
         "firstblog": firstblog,
+        'aboutus': aboutus,
+        'comp_address': comp_address,
     }
-    # return JsonResponse(context, safe=False)
     return render(request, 'index/index.html', context)
 
 

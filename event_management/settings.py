@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'event_booking',
     'blog',
     'admin_site',
+    'colorfield',
+    'general',
+    'font_icons',
 ]
 
 # CKEDITOR_CONFIGS = {
@@ -73,6 +76,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cprocessor.cprocessor.context_processor',
             ],
         },
     },
@@ -155,4 +159,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
 #     "django.core.context_processors.tz",
 #     "django.contrib.messages.context_processors.messages",
 #     'django.core.context_processors.request',
+#
 # )

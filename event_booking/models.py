@@ -1,6 +1,7 @@
 from django.db import models
 
 from django.db import models
+from colorfield.fields import ColorField
 from django import forms
 
 STATUS_CHOICE = (
@@ -18,6 +19,8 @@ class Events(models.Model):
     start = models.DateTimeField(null=True,blank=True)
     end = models.DateTimeField(null=True,blank=True)
     status = models.CharField(default='pending', max_length=100, choices=STATUS_CHOICE)
+    color = ColorField(default='#FF0000')
+    textcolor = ColorField(default='#000000')
 
     def __str__(self):
         return self.name

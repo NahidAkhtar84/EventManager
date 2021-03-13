@@ -20,6 +20,9 @@
                         start: '{{ event.start|date:"Y-m-d" }}',
                         end: '{{ event.end|date:"Y-m-d" }}' + ' 20:00:00',
                         id: '{{ event.id }}',
+                        id: '{{ event.id }}',
+                        color: '{{ event.color }}',
+                        textColor: '{{ event.textcolor }}',
                     },
                 {% endfor %}
             ],
