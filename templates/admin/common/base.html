@@ -22,8 +22,8 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css"/>
 <!--    <link rel="stylesheet" href="{% static 'fcalendar/fullcalendar.print.min.css' %}">-->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css"/>
+    {% comment %}<link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css"/>{% endcomment %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
@@ -171,7 +171,7 @@
 
 <!-- Bootstrap core JavaScript-->
 <!--<script src="{% static 'admin/vendor/jquery/jquery.min.js' %}"></script>-->
-<!--<script src="{% static 'admin/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>-->
+<script src="{% static 'admin/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
 <!-- Core plugin JavaScript-->
 <script src="{% static 'admin/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
