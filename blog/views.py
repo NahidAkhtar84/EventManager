@@ -12,8 +12,8 @@ from django.http import JsonResponse
 def Index(request):
     all_events = Events.objects.filter(status='accepted')
     recent_events = Events.objects.filter(status='accepted').filter(start__gte = datetime.datetime.now()).order_by('-start')
-    firstblog = BlogPost.objects.all().order_by('date')[0]
-    blogs = BlogPost.objects.all().order_by('date')[1:3]
+    firstblog = BlogPost.objects.all().order_by('-date')[0]
+    blogs = BlogPost.objects.all().order_by('-date')[1:3]
     aboutus = about_us.objects.first()
     comp_address = company_address.objects.first()
 
@@ -49,3 +49,18 @@ def BlogDetails(request, slug):
     }
     # return JsonResponse(context, safe=False)
     return render(request, 'index/blog_details.html', context)
+
+
+def BlogList(request):
+    blog_list = BlogPost.objects.all().order_by('-date')
+    paginator = Paginator(blog_list, 4)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'all_post': blog_list,
+        'page_obj': page_obj
+    }
+
+    return render(request, 'index/blog_list.html', context)
