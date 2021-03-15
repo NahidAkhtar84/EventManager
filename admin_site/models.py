@@ -39,12 +39,24 @@ def image_path(instance, filename):
     random_str = ''.join((random.choice(chars)) for _ in range(20))
     return 'blog/blog_img_{randomstring}{ext}'.format(basename=base_name, randomstring=random_str, ext=f_extension)
 
+class Comment(models.Model):
+    blog = models.ForeignKey('BlogPost', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    email = models.EmailField(max_length=400)
+    phone = models.CharField(max_length=20, null=True, blank=True)
+    message = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s - %s' %(self.blog.title, self.name)
+
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, null=True, blank=True)
     category = models.CharField(max_length=255, null=True, blank=True)
     details = RichTextField(blank=True, null=True)
+    likes = models.IntegerField(default=0)
     date = models.DateField(auto_now_add=True)
     images = models.ImageField(blank=True, null=True, upload_to=image_path)
 

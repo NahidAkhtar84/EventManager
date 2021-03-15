@@ -1,11 +1,12 @@
 from time import strptime
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect, HttpResponseRedirect
 from event_booking.models import Events
 from datetime import datetime, timedelta
 from django.core.paginator import Paginator, EmptyPage
-from admin_site.models import BlogPost
+from admin_site.models import BlogPost, Comment
 from general.models import about_us, company_address
+from django.urls import reverse
 from django.http import JsonResponse
 
 
@@ -61,6 +62,35 @@ def BlogDetails(request, slug):
     }
     # return JsonResponse(context, safe=False)
     return render(request, 'index/blog_details.html', context)
+
+def Likes(request, slug):
+    bid = BlogPost.objects.get(slug=slug)
+    field_obj = BlogPost._meta.get_field('likes')
+    field_val = int(field_obj.value_from_object(bid))
+    field_val += 1
+    bid.likes = field_val
+    bid.save()
+    return redirect('details', slug=slug)
+
+def LeaveComment(request):
+    pt = request.POST
+    bid = BlogPost.objects.get(slug=pt.get('bid'))
+    # bid = BlogPost.objects.get(slug=slug)
+    name = pt.get('name')
+    email = pt.get('email')
+    phone = pt.get('phone')
+    message = pt.get('message')
+    
+    comment = Comment(
+        blog = bid,
+        name = name,
+        phone = phone,
+        email = email,
+        message = message
+                      )
+    comment.save()
+    
+    return redirect("details", slug=pt.get('bid'))
 
 
 def BlogList(request):

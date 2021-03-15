@@ -7,6 +7,8 @@ urlpatterns = [
     # index page
     path('', views.Index, name='index'),
     path('blog-details/<str:slug>', views.BlogDetails, name='details'),
+    path('likeinc/<str:slug>', views.Likes, name='likeinc'),
+    path('lcomment', views.LeaveComment , name='lcomment'),
     path('blog', views.BlogList, name='blog_list'),
 ]
 
