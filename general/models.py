@@ -5,6 +5,9 @@ from ckeditor.fields import RichTextField
 import random
 from django.conf import settings
 from font_icons.models import IconForeignKeyField
+# from django.contrib.gis.utils import GeoIP
+import requests
+import googlemaps
 
 
 # Create your models here.
@@ -48,6 +51,38 @@ class company_address(models.Model):
 
     def __str__(self):
         return self.title
+
+class dynAddress(models.Model):
+    address_1 = models.CharField(max_length=255, blank=True)
+    address_2 = models.CharField(max_length=255, blank=True)
+    zip_code = models.IntegerField(blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True)
+    country = models.CharField(max_length=255, blank=True, null=True)
+    latitude = models.DecimalField(
+        max_digits=9, decimal_places=6, blank=True, default='0')
+    longitude = models.DecimalField(
+        max_digits=9, decimal_places=6, blank=True, default='0')
+
+    def __str__(self):
+        return f'Adresse de {self.address_1}'
+
+    class Meta:
+        verbose_name_plural = "addresses"
+
+    def save(self, **kwargs):
+        df = None
+        address = " ".join([self.address_1, self.address_2, str(self.zip_code), self.city])
+        print('address:',address)
+        api_key = "AIzaSyBERbMA-_M3emhp9ZFzrJVYuBy__Va3kr4"
+        # google_map_key = googlemaps.Client(key="AIzaSyBERbMA-_M3emhp9ZFzrJVYuBy__Va3kr4")
+        api_response = requests.get('https://maps.googleapis.com/maps/api/geocode/json?address={0}&key={1}'.format(address, api_key))
+        api_response_dict = api_response.json()
+        print('response status: ',api_response_dict['status'])
+        if api_response_dict['status'] == 'OK':
+            self.latitude = api_response_dict['results'][0]['geometry']['location']['lat']
+            self.longitude = api_response_dict['results'][0]['geometry']['location']['lng']
+            self.save()
+        super().save(**kwargs)
 
 
 class copyright(models.Model):

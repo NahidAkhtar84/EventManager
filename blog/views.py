@@ -1,6 +1,8 @@
+from time import strptime
+
 from django.shortcuts import render
 from event_booking.models import Events
-import datetime
+from datetime import datetime, timedelta
 from django.core.paginator import Paginator, EmptyPage
 from admin_site.models import BlogPost
 from general.models import about_us, company_address
@@ -11,11 +13,20 @@ from django.http import JsonResponse
 
 def Index(request):
     all_events = Events.objects.filter(status='accepted')
-    recent_events = Events.objects.filter(status='accepted').filter(start__gte = datetime.datetime.now()).order_by('-start')
     firstblog = BlogPost.objects.all().order_by('-date')[0]
     blogs = BlogPost.objects.all().order_by('-date')[1:3]
     aboutus = about_us.objects.first()
     comp_address = company_address.objects.first()
+    dteve = request.GET.get('dateeve')
+    if dteve:
+        date = datetime.now()
+        poj = date + timedelta(days=int(dteve))
+
+    if dteve:
+        recent_events = Events.objects.filter(status='accepted').filter(start__lte = poj, end__gte = poj).order_by('-start')
+    else:
+        recent_events = Events.objects.filter(status='accepted').filter(start__gte=datetime.now()).order_by('-start')
+
 
     page = request.GET.get('page', 1)
     paginator = Paginator(recent_events, 3)
@@ -33,6 +44,7 @@ def Index(request):
         "firstblog": firstblog,
         'aboutus': aboutus,
         'comp_address': comp_address,
+        'n': range(5)
     }
     return render(request, 'index/index.html', context)
 

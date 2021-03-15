@@ -12,6 +12,7 @@ urlpatterns = [
     path('update$', update, name='update'),
     path('remove', remove, name='remove'),
     path('aboutus', AboutUs.as_view(), name='aboutus'),
+    path('eventsdatewise', AboutUs.as_view(), name='aboutus'),
 
     # DJ Admin Section
     path('admin/', admin.site.urls),
