@@ -2,16 +2,48 @@ from django.shortcuts import render, redirect
 from admin_site.forms import BlogPostForm
 from .models import BlogPost
 import os
-from datetime import date
+from datetime import date, datetime, timedelta
 from django.http import JsonResponse
 from event_booking.models import Events
+
 
 # Create your views here.
 
 def Dashboard(request):
     all_events = Events.objects.filter(status='accepted')
+    total_events = Events.objects.filter(status='accepted').filter(end__lte=datetime.now()).count()
+    # This months events number
+    this_month = datetime.now().month
+    current_month_events = Events.objects.filter(status='accepted').filter(start__month=this_month).count()
+
+    # Groth than previous month
+    todayh = date.today()
+    firstday = todayh.replace(day=1)
+    lastMonthdate = firstday - timedelta(days=1)
+    lastMonth = lastMonthdate.month
+    last_month_events = Events.objects.filter(status='accepted').filter(start__month=lastMonth).count()
+    growth =(current_month_events - last_month_events)*10
+
+    # Month wise data of the year
+    data = []
+    for i in range(1, 13):
+        month_data_count = Events.objects.filter(status='accepted').filter(start__month=i).count()
+        data.append(month_data_count)
+    print("data", type(data))
+
+    # pie chart
+    accepted_events = Events.objects.filter(status='accepted').filter(start__month=this_month).count()
+    pending_events = Events.objects.filter(status='pending').filter(start__month=this_month).count()
+
     context = {
         "events": all_events,
+        "total_events": total_events,
+        "current_month_events": current_month_events,
+        "last_month_events": last_month_events,
+        "accepted_events": accepted_events,
+        "pending_events": pending_events,
+        "growth": growth,
+        "data": data,
     }
     return render(request, 'admin/contents/dashboard.html', context)
 
