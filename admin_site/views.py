@@ -5,10 +5,35 @@ import os
 from datetime import date, datetime, timedelta
 from django.http import JsonResponse
 from event_booking.models import Events
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+
 
 
 # Create your views here.
 
+def Login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('dashboard')
+        else:
+            messages.error(request, 'Username or Password is incorrect!!')
+    return render(request, 'login.html')
+
+
+def logout_user(request):
+    logout(request)
+    messages.success(request, 'Logged Out')
+    return redirect('login')
+
+
+@login_required(login_url='login')
 def Dashboard(request):
     all_events = Events.objects.filter(status='accepted')
     total_events = Events.objects.filter(status='accepted').filter(end__lte=datetime.now()).count()
@@ -48,6 +73,7 @@ def Dashboard(request):
     return render(request, 'admin/contents/dashboard.html', context)
 
 
+@login_required(login_url='login')
 def WritePost(request):
     if request.method == 'POST':
         post_form = BlogPostForm(request.POST, request.FILES)
@@ -60,6 +86,7 @@ def WritePost(request):
 
             blog.save()
 
+        messages.success(request, 'A New Blog Post Added.')
         return redirect('manage-post')
     else:
         post_form = BlogPostForm()
@@ -67,6 +94,7 @@ def WritePost(request):
     return render(request, 'admin/contents/write_blog.html')
 
 
+@login_required(login_url='login')
 def ManagePost(request):
     posts = BlogPost.objects.all().order_by('-id')
 
@@ -76,6 +104,7 @@ def ManagePost(request):
     return render(request, 'admin/contents/manage_post.html', context)
 
 
+@login_required(login_url='login')
 def EditPost(request, pk):
     post = BlogPost.objects.get(id=pk)
 
@@ -97,6 +126,7 @@ def EditPost(request, pk):
                 os.remove(image_path)
 
             blog.save()
+            messages.success(request, 'Information Updated')
             return redirect("manage-post")
     else:
         if request.method == 'POST':
@@ -105,25 +135,10 @@ def EditPost(request, pk):
             c_image = request.POST.get('current_image')
             details = request.POST.get('details')
 
-            BlogPost.objects.filter(id=pk).update(title=title, category=category, images=c_image, details=details, date=date.today())
+            BlogPost.objects.filter(id=pk).update(title=title, category=category, images=c_image, details=details,
+                                                  date=date.today())
+            messages.success(request, 'Information Updated')
             return redirect("manage-post")
-
-    # if request.method == 'POST':
-    #     title = request.POST.get('title')
-    #     image = request.FILES.get('image')
-    #     c_image = request.POST.get('current_image')
-    #     details = request.POST.get('details')
-    #
-    #     print(image)
-    #
-    #     context = {
-    #         't': title,
-    #         'img': str(image),
-    #         'c_img': c_image,
-    #         'd': details
-    #     }
-    #     return JsonResponse(context, safe=False)
-
     context = {
         'post': post
     }
@@ -131,6 +146,7 @@ def EditPost(request, pk):
     return render(request, 'admin/contents/edit_post.html', context)
 
 
+@login_required(login_url='login')
 def DeletePost(request, pk):
     post = BlogPost.objects.get(id=pk)
     post.delete()

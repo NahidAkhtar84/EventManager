@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from event_booking.views import add_event, EventBook, update, remove
 from general.views import AboutUs
+from admin_site import views as ad_site
 
 urlpatterns = [
     # user View
@@ -19,5 +20,7 @@ urlpatterns = [
 
     # custom admin
     path('admin-site/', include('admin_site.urls')),
+    path('login/', ad_site.Login, name='login'),
+    path('logout/', ad_site.logout_user, name='logout'),
     path('', include('blog.urls')),
 ]

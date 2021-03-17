@@ -4,6 +4,8 @@ from django.views import View
 from django.shortcuts import render, redirect
 from event_management.utilities import twilioSMS
 from general.models import about_us
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 # Create your views here.
@@ -42,8 +44,8 @@ def remove(request):
 
 
 class EventBook(View):
-    def get(self, request):
-        return render(request, 'index/event_booking.html')
+    # def get(self, request):
+    #     return render(request, 'index/event_booking.html')
 
     def post(self, request):
         if request.method == 'POST':
@@ -54,7 +56,7 @@ class EventBook(View):
             email = pst.get('email')
             start_date = pst.get('startdate')
             end_date = pst.get('enddate')
-            print("This is: ", start_date)
+            # print("This is: ", start_date)
             event = Events(
                 name=name,
                 username=username,
@@ -87,10 +89,12 @@ class EventBook(View):
             #     'mbl': mobile
             # }
             # return JsonResponse(context)
+            messages.success(request, 'We will be in contact soon.')
             return redirect('index')
 
 
 # Custom Admin (Events) =========================================
+@login_required(login_url='login')
 def EventRequests(request):
     events = Events.objects.all().order_by('-id')
     context = {
@@ -99,16 +103,21 @@ def EventRequests(request):
     return render(request, 'admin/events/manage_events.html', context)
 
 
+@login_required(login_url='login')
 def AcceptEvent(request, pk):
     Events.objects.filter(id=pk).update(status='accepted')
+    messages.success(request, 'New event request is accepted!')
     return redirect('all-events')
 
 
+@login_required(login_url='login')
 def RejectEvent(request, pk):
     Events.objects.filter(id=pk).delete()
+    messages.warning(request, 'An Event Request is Deleted!!')
     return redirect('all-events')
 
 
+@login_required(login_url='login')
 def EditEvent(request, pk):
     event = Events.objects.filter(id=pk)
     event_info = event.get()
@@ -127,6 +136,7 @@ def EditEvent(request, pk):
 
         event.update(name=name, username=username, phone=phone, email=email,
                      start=start, end=end, status=status, color=color, textcolor=text_color)
+        messages.success(request, 'Information Updated Successfully!')
         return redirect('all-events')
 
     context = {

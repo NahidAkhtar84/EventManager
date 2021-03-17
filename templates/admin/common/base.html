@@ -9,7 +9,6 @@
     <meta name="author" content="">
 
     {% block title %} {% endblock %}
-    {% comment %}<title>SB Admin 2 - Dashboard</title>{% endcomment %}
 
     <!-- Custom fonts for this template-->
     <link href="{% static 'admin/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -19,13 +18,7 @@
     <link href="{% static 'admin/css/sb-admin-2.min.css' %}" rel="stylesheet">
 
     {% block css %} {% endblock %}
-
-
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css"/>
-<!--    <link rel="stylesheet" href="{% static 'fcalendar/fullcalendar.print.min.css' %}">-->
-    {% comment %}<link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css"/>{% endcomment %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
@@ -36,122 +29,20 @@
     <script src="{% static 'js/customchart.js' %}"></script>
 
 
-
-    <script>
-        $(document).ready(function () {
-            var calendar = $('#calendar').fullCalendar({
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                },
-                events: [
-                    {% for event in events %}
-                        {
-                            title: "{{ event.name }}",
-                            start: '{{ event.start|date:"Y-m-d" }}',
-                            end: '{{ event.end|date:"Y-m-d" }}'+' 20:00:00',
-                            id: '{{ event.id }}',
-                            color: '{{ event.color }}',
-                            textColor: '{{ event.textcolor }}',
-
-                        },
-                    {% endfor %}
-                ],
-
-                selectable: true,
-                selectHelper: true,
-                editable: true,
-                eventLimit: true,
-                select: function (start, end, allDay) {
-                    var title = prompt("Enter Event Title");
-                    if (title) {
-                        var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-                        var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
-
-                        $.ajax({
-                            type: "GET",
-                            url: '/add_event',
-                            data: {'title': title, 'start': start, 'end': end},
-                            dataType: "json",
-                            success: function (data) {
-                                calendar.fullCalendar('refetchEvents');
-                                alert("Added Successfully");
-                            },
-                            failure: function (data) {
-                                alert('There is a problem!!!');
-                            }
-                        });
-                    }
-                },
-
-                eventResize: function (event) {
-                    var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-                    var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-                    var title = event.title;
-                    var id = event.id;
-                    $.ajax({
-                        type: "GET",
-                        url: '/update',
-                        data: {'title': title, 'start': start, 'end': end, 'id': id},
-                        dataType: "json",
-                        success: function (data) {
-                            calendar.fullCalendar('refetchEvents');
-                            alert('Event Update');
-                        },
-                        failure: function (data) {
-                            alert('There is a problem!!!');
-                        }
-                    });
-                },
-
-                eventDrop: function (event) {
-                    var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-                    var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-                    var title = event.title;
-                    var id = event.id;
-                    $.ajax({
-                        type: "GET",
-                        url: '/update',
-                        data: {'title': title, 'start': start, 'end': end, 'id': id},
-                        dataType: "json",
-                        success: function (data) {
-                            calendar.fullCalendar('refetchEvents');
-                            alert('Event Update');
-                        },
-                        failure: function (data) {
-                            alert('There is a problem!!!');
-                        }
-                    });
-                },
-
-            });
-        });
-
-    </script>
+    {% block calendar %} {% endblock %}
 
 </head>
-
 <body id="page-top">
-
-<!-- Page Wrapper -->
 <div id="wrapper">
     {% include 'admin/common/sidebar.html' %}
-    <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
-        <!-- Main Content -->
         <div id="content">
             {% include 'admin/common/heder.html' %}
             {% block content %} {% endblock %}
         </div>
-        <!-- End of Main Content -->
         {% include 'admin/common/footer.html' %}
     </div>
-    <!-- End of Content Wrapper -->
 </div>
-<!-- End of Page Wrapper -->
-
-<!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
 </a>
@@ -170,20 +61,13 @@
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="login.html">Logout</a>
+                <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Bootstrap core JavaScript-->
-<!--<script src="{% static 'admin/vendor/jquery/jquery.min.js' %}"></script>-->
 <script src="{% static 'admin/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-<!-- Core plugin JavaScript-->
 <script src="{% static 'admin/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
-<!-- Custom scripts for all pages-->
 <script src="{% static 'admin/js/sb-admin-2.min.js' %}"></script>
 
 {% block js %} {% endblock %}

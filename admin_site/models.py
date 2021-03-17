@@ -75,7 +75,3 @@ def slug_gen(sender, instance, *args, **kwargs):
 
 
 pre_save.connect(slug_gen, sender=BlogPost)
-
-# https://www.youtube.com/watch?v=-yNJk2_mI9o&list=PLCC34OHNcOtr025c1kHSPrnP18YPB-NFi&index=15
-# https://www.youtube.com/watch?v=mF5jzSXb1dc&list=PLCC34OHNcOtr025c1kHSPrnP18YPB-NFi&index=22
-# https://www.youtube.com/watch?v=ygzGr51dbsY

@@ -5,6 +5,45 @@
 {% include 'calendar.html' %}
 {% endblock %}
 {% block title %} <title>Home | Event Management</title> {% endblock %}
+{% block css_index %}
+    <!-- Date Time Picker CSS -->
+    <link rel="stylesheet" href="{% static 'date-time-phone/jquery-ui.css' %}">
+    <link rel='stylesheet' href="{% static 'date-time-phone/jquery-ui-timepicker-addon.css' %}"/>
+    <!-- Date Time Picker CSS -->
+{% endblock %}
+{% block js_index %}
+    <!-- Date Time Picker JS -->
+    <script src="{% static 'date-time-phone/jquery-ui.js' %}"></script>
+    <script src="{% static 'date-time-phone/jquery-ui-timepicker-addon.js' %}"></script>
+
+    <script>
+        $(function () {
+            $("#id_birth_date").datetimepicker({dateFormat: 'yy-mm-dd', controlType: 'select'}).attr("autocomplete", "off");
+            // $( "#id_birth_date" ).timepicker({ dateFormat: 'yy-mm-dd', maxDate: 0, controlType: 'select'}).attr("autocomplete", "off") ;
+            //$( "#id_birth_date" ).datepicker({ dateFormat: 'yy-mm-dd' }).attr("autocomplete", "off") ;
+        });
+    </script>
+
+    <script>
+        $(function () {
+            $("#end_date").datetimepicker({dateFormat: 'yy-mm-dd', controlType: 'select'}).attr("autocomplete", "off");
+
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script>
+
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                Swal.fire(
+                  'Form Submitted Succesfully',
+                  '{{ message }}',
+                  'success'
+                )
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
 {% block content %}
 {% include 'common/preloder.html' %}
 <section class="hero-section set-bg" data-setbg="{% static 'img/hero.jpg' %}">
@@ -85,14 +124,61 @@
                             <div class="col-lg-8 m-auto">
                                 <div class="row">
                                     <div class="col-lg-12 text-center">
-                                        <a href="/eventbookingpage">
-                                            <button class="site-btn"><i class="fa fa-ticket"></i> Book an Event</button>
+                                        <a href="#">
+                                            <button class="site-btn" data-toggle="modal" data-target="#exampleModal">
+                                                <i class="fa fa-ticket"></i>
+                                                Book an Event
+                                            </button>
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="exampleModalLabel">Book an Event</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/eventbookingpage" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Event Name:</label>
+                                    <input type="text" class="form-control" id="eventname" name="eventname">
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label">Your Full Name:</label>
+                                    <input type="text" class="form-control" id="username" name="username">
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label">Phone:</label>
+                                    <input type="text" class="form-control" id="mobilenumber" name="mobilenumber">
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label">Email:</label>
+                                    <input type="email" class="form-control" id="email" name="email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_birth_date" class="col-form-label">Start Date:</label>
+                                    <input type="text" id="id_birth_date" class="form-control" name="startdate">
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_birth_date" class="col-form-label">End Date:</label>
+                                    <input type="text" id="end_date" class="form-control" name="enddate">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -298,7 +384,7 @@
                     <div class="ct-address">
                         <span>{{ comp_address.address_title }}:</span>
                         {% if comp_address.address %}
-                        {{ comp_address.address }}
+                        <p>{{ comp_address.address }}</p>
                         {% else %}
                         <p>01 Pascale Springs Apt. 339, NY City <br/>United State</p>
                         {% endif %}
@@ -319,60 +405,7 @@
             <div class="col-lg-6">
                 <div class="cs-map">
                     <div id='map'></div>
-                    <script>
-                        mapboxgl.accessToken = 'pk.eyJ1IjoibmFoaWQxNzUxMTA4NCIsImEiOiJja205aWV2a2sxaHlhMm5wcmtodDN1dm9oIn0.t6Lh-p48uoWiNr0Etuue-w';
-
-                        var map = new mapboxgl.Map({
-                          container: 'map',
-                          style: 'mapbox://styles/nahid17511084/ckm9lfbhci2bd17l9t80tnwyj',
-                          zoom:1
-                        });
-
-                        // code from the next step will go here!
-
-                        var geojson = {
-                          type: 'FeatureCollection',
-                          features: [{
-                            type: 'Feature',
-                            geometry: {
-                              type: 'Point',
-                              coordinates: [{{lonlat.latitude}}, {{lonlat.longitude}}]
-                            },
-                            properties: {
-                              title: 'Mapbox',
-                              description: 'Washington, D.C.'
-                            }
-                          },
-                          {
-                            type: 'Feature',
-                            geometry: {
-                              type: 'Point',
-                              coordinates: [-122.414, 37.776]
-                            },
-                            properties: {
-                              title: 'Mapbox',
-                              description: 'San Francisco, California'
-                            }
-                          }]
-                        };
-
-                        // add markers to map
-                            geojson.features.forEach(function(marker) {
-
-                              // create a HTML element for each feature
-                              var el = document.createElement('div');
-                              el.className = 'marker';
-
-                              // make a marker for each feature and add to the map
-                              new mapboxgl.Marker(el)
-                                .setLngLat(marker.geometry.coordinates)
-                                .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-                                .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
-                                .addTo(map);
-                            });
-
-                    </script>
-
+                    {% include 'map.html' %}
                 </div>
             </div>
         </div>

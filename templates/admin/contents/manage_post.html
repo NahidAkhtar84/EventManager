@@ -15,7 +15,19 @@
     <script src="{% static 'admin/vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'admin/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
     <script src="{% static 'admin/js/demo/datatables-demo.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script>
 
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                Swal.fire(
+                    'Success!!',
+                    '{{ message }}',
+                    'success'
+                )
+            </script>
+        {% endfor %}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -70,7 +82,8 @@
                                         </span>
                                         <span class="text">Edit</span>
                                     </a>
-                                    <a href="{% url 'delete-post' post.id %}" class="btn btn-danger btn-icon-split btn-sm">
+                                    <a href="#" class="btn btn-danger btn-icon-split btn-sm" data-toggle="modal"
+                                       data-target="#DeleteModal{{ post.id }}">
                                         <span class="icon text-white-50">
                                           <i class="fas fa-trash"></i>
                                         </span>
@@ -97,6 +110,24 @@
                                                 <button type="button" class="btn btn-secondary btn-sm"
                                                         data-dismiss="modal">Close
                                                 </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="DeleteModal{{ post.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Are You Sure?</h5>
+                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">You won't be able to revert this!</div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                <a class="btn btn-danger" href="{% url 'delete-post' post.id %}">Delete</a>
                                             </div>
                                         </div>
                                     </div>
