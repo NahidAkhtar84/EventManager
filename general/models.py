@@ -73,8 +73,7 @@ class dynAddress(models.Model):
         df = None
         address = " ".join([self.address_1, self.address_2, str(self.zip_code), self.city])
         print('address:',address)
-        api_key = "AIzaSyBERbMA-_M3emhp9ZFzrJVYuBy__Va3kr4"
-        # google_map_key = googlemaps.Client(key="AIzaSyBERbMA-_M3emhp9ZFzrJVYuBy__Va3kr4")
+        api_key = ""
         api_response = requests.get('https://maps.googleapis.com/maps/api/geocode/json?address={0}&key={1}'.format(address, api_key))
         api_response_dict = api_response.json()
         print('response status: ',api_response_dict['status'])
